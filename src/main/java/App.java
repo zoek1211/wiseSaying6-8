@@ -1,15 +1,15 @@
 import java.util.Scanner;
 
 public class App {
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
 
-    int lastId = 0;
+    private int lastId = 0;
 
-    WiseSaying[] wiseSayings = new WiseSaying[100];
-    int wiseSayingsLastIndex = -1;
+    private WiseSaying[] wiseSayings = new WiseSaying[100];
+    private int wiseSayingsLastIndex = -1;
 
     // run app 진입점 시작
-    void run() {
+    public void run() {
         System.out.println("== 명언 앱 ==");
 
         while (true) {
@@ -42,15 +42,15 @@ public class App {
 
         WiseSaying wiseSaying = write(content, author);
 
-        System.out.printf("%d번 명언이 등록되었습니다.\n", wiseSaying.id);
+        System.out.printf("%d번 명언이 등록되었습니다.\n", wiseSaying.getId());
     }
 
-    // 내부처리 write
-    WiseSaying write(String content, String author) {
-        WiseSaying wiseSaying = new WiseSaying();
-        wiseSaying.id = ++lastId;
-        wiseSaying.content = content;
-        wiseSaying.author = author;
+    // 명언 등록 메서드
+    // WiseSaying 객체를 생성하고, id를 증가시키고, content와 author를 설정한 후, 명언 배열에 추가
+    private WiseSaying write(String content, String author) {
+        // 생성자 를 사용하여 WiseSaying 객체 생성
+        // id를 증가시키고, content와 author를 설정
+        WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
 
         // 명언 배열에 추가하고 wiseSayingsLastIndex를 증가시킴
         wiseSayings[++wiseSayingsLastIndex] = wiseSaying;
@@ -58,7 +58,7 @@ public class App {
     }
 
     // 명언 목록 출력
-    void actionlist() {
+    private void actionlist() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------");
 
@@ -66,18 +66,18 @@ public class App {
 
         for (WiseSaying wiseSaying : forListWiseSayings) {
             System.out.printf("%d / %s / %s\n",
-                    wiseSaying.id, wiseSaying.author, wiseSaying.content);
+                    wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent());
         }
     }
 
     // 명언 배열의 크기 반환
-    int getSize() {
+    private int getSize() {
 
         return wiseSayingsLastIndex + 1;
     }
 
     // 명언 배열을 역순으로 반환
-    WiseSaying[] findForList() {
+    private WiseSaying[] findForList() {
         WiseSaying[] forListWiseSayings = new WiseSaying[getSize()];
 
         int forListWiseSayingIndex = -1;
@@ -90,7 +90,7 @@ public class App {
     }
 
     // 삭제 명령어 처리
-    void actionDelete(String cmd) {
+    private void actionDelete(String cmd) {
         String[] cmdBits = cmd.split("=", 2); // 삭제 명령어와 id를 분리
 
         // id가 입력되지 않은 경우 처리
@@ -115,7 +115,7 @@ public class App {
     }
 
     // 삭제 메서드
-    int delete(int id) {
+    private int delete(int id) {
         int deleteIndex = findIndexById(id); // id에 해당하는 명언의 인덱스를 찾음
 
         // 삭제할 명언이 없는 경우 -1 반환
@@ -134,7 +134,7 @@ public class App {
     }
 
     // 수정 명령어 처리
-    void actionModify(String cmd) {
+    private void actionModify(String cmd) {
         String[] cmdBits = cmd.split("=", 2); // 수정 명령어와 id 분리
 
         // id가 입력되지 않은 경우 처리
@@ -156,11 +156,11 @@ public class App {
         }
 
         // 명언 수정
-        System.out.printf("명언(기존) :%s\n", wiseSaying.content);
+        System.out.printf("명언(기존) :%s\n", wiseSaying.getContent());
         System.out.print("명언 : ");
         String content = sc.nextLine().trim();
 
-        System.out.printf("작가(기존) :%s\n", wiseSaying.author);
+        System.out.printf("작가(기존) :%s\n", wiseSaying.getAuthor());
         System.out.print("작가 : ");
         String author = sc.nextLine().trim();
 
@@ -168,9 +168,9 @@ public class App {
     }
 
     // id에 해당하는 명언의 인덱스를 찾는 메서드
-    int findIndexById(int id) {
+    private int findIndexById(int id) {
         for (int i = 0; i <= wiseSayingsLastIndex; i++) {
-            if (wiseSayings[i].id == id) {
+            if (wiseSayings[i].getId() == id) {
                 return i;
             }
         }
@@ -179,7 +179,7 @@ public class App {
 
     // id에 해당하는 명언을 찾는 메서드
     // findIndexById 메서드를 사용하여 id에 해당하는 명언의 인덱스를 찾고, 해당 인덱스의 명언을 반환
-    WiseSaying findById(int id) {
+    private WiseSaying findById(int id) {
         int index = findIndexById(id);
 
         if (index == -1) return null;
@@ -189,9 +189,9 @@ public class App {
 
     // 명언 수정 메서드
     // WiseSaying 객체의 content와 author를 수정
-    void modify(WiseSaying wiseSaying, String content, String author) {
-        wiseSaying.content = content;
-        wiseSaying.author = author;
+    private void modify(WiseSaying wiseSaying, String content, String author) {
+        wiseSaying.setContent(content);
+        wiseSaying.setAuthor(author);
     }
 
 
