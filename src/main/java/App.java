@@ -26,10 +26,8 @@ public class App {
 
             } else if (cmd.equals("목록")) {  //목록 출력
                 actionlist();
-            } else if (cmd.equals("삭제?id=1")) { // 삭제
-                actionDelete(1);
-            } else if (cmd.equals("삭제?id=2")) {
-                actionDelete(1);
+            } else if (cmd.startsWith("삭제")) { // 삭제
+                actionDelete(cmd);
             }
         }
 
@@ -92,8 +90,19 @@ public class App {
     }
 
     // 삭제
-    void actionDelete(int id) {
-        delete(id);
+    void actionDelete(String cmd) {
+        String[] cmdBits = cmd.split(" ", 2); // 삭제 명령어와 id를 분리
+
+        // id가 입력되지 않은 경우 처리
+        if  (cmdBits.length < 2 || cmdBits[1].isEmpty()) {
+            System.out.println("id를 입력해주세요.");
+            return;
+        }
+
+        // id를 정수로 변환
+        int id = Integer.parseInt(cmdBits[1]);
+
+        delete(id); // 삭제 메서드 호출
 
         System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
     }
