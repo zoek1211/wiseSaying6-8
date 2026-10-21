@@ -1,8 +1,5 @@
 import java.util.Scanner;
 
-// refactor
-// main 에 로직 구현 안함
-// Static 안씀
 public class App {
     Scanner sc = new Scanner(System.in);
 
@@ -54,6 +51,7 @@ public class App {
         wiseSaying.content = content;
         wiseSaying.author = author;
 
+        // 명언 배열에 추가하고 wiseSayingsLastIndex를 증가시킴
         wiseSayings[++wiseSayingsLastIndex] = wiseSaying;
         return wiseSaying;
     }
@@ -71,12 +69,13 @@ public class App {
         }
     }
 
-    // 현재 명언 몇개
+    // 명언 배열의 크기 반환
     int getSize() {
 
         return wiseSayingsLastIndex + 1;
     }
 
+    // 명언 배열을 역순으로 반환
     WiseSaying[] findForList() {
         WiseSaying[] forListWiseSayings = new WiseSaying[getSize()];
 
@@ -89,9 +88,9 @@ public class App {
         return forListWiseSayings;
     }
 
-    // 삭제
+    // 삭제 명령어 처리
     void actionDelete(String cmd) {
-        String[] cmdBits = cmd.split(" ", 2); // 삭제 명령어와 id를 분리
+        String[] cmdBits = cmd.split("=", 2); // 삭제 명령어와 id를 분리
 
         // id가 입력되지 않은 경우 처리
         if  (cmdBits.length < 2 || cmdBits[1].isEmpty()) {
@@ -102,12 +101,20 @@ public class App {
         // id를 정수로 변환
         int id = Integer.parseInt(cmdBits[1]);
 
-        delete(id); // 삭제 메서드 호출
+        int deletedIndex = delete(id);
 
+        // 삭제된 인덱스가 -1이면 해당 id의 명언이 존재하지 않음을 알림
+        if (deletedIndex == -1) {
+            System.out.printf("%d번 명언은 존재하지 않습니다.\n", id);
+            return;
+        }
+
+        // 삭제 성공 메시지 출력
         System.out.printf("%d번 명언이 삭제되었습니다.\n", id);
     }
 
-    void delete(int id) {
+    // 삭제 메서드
+    int delete(int id) {
         int deleteIndex = -1;
 
         // 삭제할 명언의 인덱스를 찾음
@@ -118,7 +125,8 @@ public class App {
             }
         }
 
-        if (deleteIndex == -1) return;
+        // 삭제할 명언이 없는 경우 -1 반환
+        if (deleteIndex == -1) return deleteIndex;
 
         // 삭제할 인덱스 이후의 요소들을 한 칸씩 앞으로 이동
         for (int i = deleteIndex + 1; i <= wiseSayingsLastIndex; i++) {
@@ -128,6 +136,8 @@ public class App {
         // 마지막 요소를 null로 설정하고 wiseSayingsLastIndex를 감소시킴
         wiseSayings[wiseSayingsLastIndex] = null;
         wiseSayingsLastIndex--;
+
+        return deleteIndex; // 삭제된 인덱스 반환
     }
 
 
